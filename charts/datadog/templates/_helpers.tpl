@@ -767,3 +767,22 @@ true
 false
 {{- end -}}
 {{- end -}}
+
+
+{{/*
+Create RABCs for custome resources
+*/}}
+{{- define "orchestratorExplorer-config-crs" -}}
+
+{{- range $cr := .Values.datadog.orchestratorExplorer.customResourcesCollection }}
+- apiGroups:
+  - {{ (splitList "/" $cr) | first | quote }}
+  resources:
+  - {{ (splitList "/" $cr) | last | quote }}
+  verbs:
+  - get
+  - list
+  - watch
+{{- end }}
+
+{{- end -}}

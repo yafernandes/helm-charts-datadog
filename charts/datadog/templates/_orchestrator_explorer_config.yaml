@@ -1,0 +1,28 @@
+{{- define "orchestratorExplorer-config" -}}
+
+{{/*
+If custom config is provided, then it won't return the default config
+*/}}
+
+{{- $useCutomConfig := false -}}
+{{- range $k, $v := .Values.clusterAgent.confd -}}
+{{- if regexMatch "^orchestrator.yaml.*"  $k  -}}
+{{- $useCutomConfig = true -}}
+{{- end -}}
+{{- end -}}
+
+{{- if eq $useCutomConfig false  -}}
+orchestrator.yaml.default: |-
+  cluster_check: {{ .Values.clusterChecksRunner.enabled }}
+  init_config:
+  instances: 
+    - skip_leader_election: {{ .Values.clusterChecksRunner.enabled }}
+      {{- if gt (len $.Values.datadog.orchestratorExplorer.customResourcesCollection) 0 }}
+      crd_collectors:
+      {{- toYaml $.Values.datadog.orchestratorExplorer.customResourcesCollection | nindent 8 -}}
+      {{- end }}
+      
+
+{{- end -}}
+
+{{- end -}}

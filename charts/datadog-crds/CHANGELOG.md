@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+* Support custom resources and custom resource definitions collection in orchestrator explorer
+
 ## 1.0.0
 
 * Default DatadogAgent stored version is `v2alpha1` to align with the GA of the Datadog Operator.

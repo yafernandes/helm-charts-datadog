@@ -1,5 +1,9 @@
 # Datadog changelog
 
+## 3.26.3
+
+* Support custom resources and custom resource definitions collection in orchestrator explorer
+
 ## 3.26.2
 
 * Adds statx syscall to seccomp for system-probe

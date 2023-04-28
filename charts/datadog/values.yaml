@@ -623,6 +623,15 @@ datadog:
     container_scrubbing:
       enabled: true
 
+    # datadog.orchestratorExplorer.customResourcesCollection -- Defines custom resources for the orchestrator explorer to collect
+
+    # customResourcesCollection is still necessary for RABCs creation even if custom orchestrator config is provided in `clusterAgent.confd` or `clusterAgent.advancedConfd`
+    # Each item should follow group/version/name, for example
+    # customResourcesCollection:
+    #   - datadoghq.com/v1alpha1/datadogmetrics
+    #   - datadoghq.com/v1alpha1/watermarkpodautoscalers
+    customResourcesCollection: []
+
   helmCheck:
     # datadog.helmCheck.enabled -- Set this to true to enable the Helm check (Requires Agent 7.35.0+ and Cluster Agent 1.19.0+)
     # This requires clusterAgent.enabled to be set to true

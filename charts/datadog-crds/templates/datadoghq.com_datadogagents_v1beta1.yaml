@@ -5686,6 +5686,10 @@ spec:
                                   type: string
                               type: object
                           type: object
+                        customResourcesCollection:
+                          items:
+                            type: string
+                          type: array
                         ddUrl:
                           type: string
                         enabled:
