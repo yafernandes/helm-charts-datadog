@@ -150,14 +150,17 @@ jobs:
         uses: helm/kind-action@v1.5.0
         with:
           node_image: kindest/node:${{ matrix.k8s }}
+          cluster_name: operator-ci-${{ matrix.k8s }}
           config: .github/kind_config.yaml
       - name: Run integ tests
         env:
           LEVAN_M_TEST_API_KEY: ${{ secrets.LEVAN_M_TEST_API_KEY }}
           LEVAN_M_TEST_APP_KEY: ${{ secrets.LEVAN_M_TEST_APP_KEY }}
+          CLUSTER_NAME: operator-ci-${{ matrix.k8s }}
         run: |
           kubectl cluster-info
           kubectl get nodes
+          helm repo add datadog https://helm.datadoghq.com
           helm dependency build ./charts/datadog-operator
           make integration-tests
 

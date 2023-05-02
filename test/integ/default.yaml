@@ -11,10 +11,12 @@ spec:
       appSecret:
         secretName: datadog-secret
         keyName: app-key
-    clusterName: kind-operator-qa
+    clusterName: operator-ci
     kubelet:
       tlsVerify: false
   features:
     clusterChecks:
       enabled: true
       useClusterChecksRunners: true
+    liveContainerCollection:
+      enabled: true

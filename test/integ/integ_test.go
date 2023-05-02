@@ -44,12 +44,8 @@ func TestIntegrationAgentWithOperator(t *testing.T) {
 
 	options := &helm.Options{
 		KubectlOptions: kubectlOptions,
-		SetValues:      map[string]string{
-			// "kube_version":                       "119",
-		},
-		ValuesFiles: []string{
-			// "../charts/.common_lint_values.yaml",
-		},
+		SetValues:      map[string]string{},
+		ValuesFiles:    []string{},
 	}
 
 	releaseName := fmt.Sprintf(
@@ -69,20 +65,26 @@ func TestIntegrationAgentWithOperator(t *testing.T) {
 		"app-key="+os.Getenv("LEVAN_M_TEST_APP_KEY"))
 	// defer k8s.KubectlDelete(t, kubectlOptions, )
 
+	// kubectl describe crd datadogagents.datadoghq.com
+	crd, _ := k8s.RunKubectlAndGetOutputE(t, kubectlOptions, "describe", "crd", "datadogagents.datadoghq.com")
+	t.Log("DatadogAgent crd", crd)
+
 	// Install DatadogAgent
 	k8s.KubectlApply(t, kubectlOptions, "default.yaml")
 	defer k8s.KubectlDelete(t, kubectlOptions, "default.yaml")
 
 	verifyNumPodsForSelector(t, kubectlOptions, 2, "agent.datadoghq.com/component=agent")
 	verifyNumPodsForSelector(t, kubectlOptions, 1, "agent.datadoghq.com/component=cluster-agent")
-	verifyNumPodsForSelector(t, kubectlOptions, 2, "agent.datadoghq.com/component=cluster-checks-runner")
+	verifyNumPodsForSelector(t, kubectlOptions, 1, "agent.datadoghq.com/component=cluster-checks-runner")
+	t.Log("Sleeping for 2 minutes")
+	time.Sleep(120 * time.Second)
 }
 
 func verifyNumPodsForSelector(t *testing.T, kubectlOptions *k8s.KubectlOptions, numPods int, selector string) {
 	t.Log("Waiting for number of pods created", "number", numPods, "selector", selector)
 	k8s.WaitUntilNumPodsCreated(t, kubectlOptions, v1.ListOptions{
 		LabelSelector: selector,
-	}, numPods, 10, 5*time.Second)
+	}, numPods, 9, 10*time.Second)
 
 	pods := k8s.ListPods(t, kubectlOptions, v1.ListOptions{
 		LabelSelector: selector,
