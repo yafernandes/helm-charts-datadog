@@ -20,3 +20,7 @@ vet:
 chart-test:
 	go test -C test ./... -count=1
 
+.PHONY: integration-tests
+integration-tests:
+	go test -C test/integ --tags=integration -count=1 -v
+

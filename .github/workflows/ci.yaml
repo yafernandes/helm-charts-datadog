@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "charts/**"
+      - "test/**"
 
 jobs:
   changed:
@@ -30,14 +31,9 @@ jobs:
           CT_DEBUG: "false"
         run: |
           changed=$(ct list-changed --config .github/ct.yaml)
-          if [[ -n "$changed" ]]; then
-            echo -n "Charts changed:"
-            echo "$changed"
-            echo "::set-output name=changed::$changed"
-          else
-            echo "PR without any chart changes - failing"
-            exit 1
-          fi
+          echo -n "Charts changed:"
+          echo "$changed"
+          echo "::set-output name=changed::$changed"
 
   lint-chart:
     runs-on: ubuntu-latest
@@ -132,11 +128,45 @@ jobs:
       - name: Run chart-testing (install)
         run: ct install --config .github/ct.yaml
 
+  test-datadog-agent-with-operator:
+    name: test-datadog-agent-with-operator
+    runs-on: ubuntu-20.04
+    needs:
+      - lint-chart
+    strategy:
+      matrix:
+        k8s:
+          - v1.16.15
+          - v1.18.20
+          - v1.22.9
+          - v1.24.2
+          - v1.25.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Create kind ${{ matrix.k8s }} cluster
+        uses: helm/kind-action@v1.5.0
+        with:
+          node_image: kindest/node:${{ matrix.k8s }}
+          config: .github/kind_config.yaml
+      - name: Run integ tests
+        env:
+          LEVAN_M_TEST_API_KEY: ${{ secrets.LEVAN_M_TEST_API_KEY }}
+          LEVAN_M_TEST_APP_KEY: ${{ secrets.LEVAN_M_TEST_APP_KEY }}
+        run: |
+          kubectl cluster-info
+          kubectl get nodes
+          helm dependency build ./charts/datadog-operator
+          make integration-tests
+
   pr-validated:
     name: pr-validated
     runs-on: ubuntu-latest
     needs:
       - install-chart
+      - test-datadog-agent-with-operator
     steps:
       - name: validate
         run: echo "PR OK"
