@@ -1,12 +1,8 @@
 .PHONY: all
 all: docs fmt vet test
 
-.PHONY: docs
-docs:
-	./.github/helm-docs.sh
-
 .PHONY: test
-test: fmt vet chart-test
+test: fmt vet unit-test
 
 .PHONY: fmt
 fmt:
@@ -16,7 +12,6 @@ fmt:
 vet:
 	go vet -C test ./...
 
-.PHONY: chart-test
-chart-test:
+.PHONY: unit-test
+unit-test:
 	go test -C test ./... -count=1
-

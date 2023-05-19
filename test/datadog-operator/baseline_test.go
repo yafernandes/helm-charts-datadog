@@ -27,22 +27,8 @@ func Test_baseline_manifests(t *testing.T) {
 				Values:      "../../charts/datadog-operator/values.yaml",
 				Overrides:   map[string]string{},
 			},
-			baselineManifestPath: "./baseline/default_Operator_Deployment.yaml",
+			baselineManifestPath: "./baseline/Operator_Deployment_default.yaml",
 			assertions:           verifyOperatorDeployment,
-			skipTest:             SkipTest,
-		},
-		{
-			name: "DatadogAgent CRD default",
-			command: common.HelmCommand{
-				ReleaseName: "datadog-operator",
-				ChartPath:   "../../charts/datadog-operator",
-				// datadogCRDs is an alias defined in the chart dependency
-				ShowOnly:  []string{"charts/datadogCRDs/templates/datadoghq.com_datadogagents_v1.yaml"},
-				Values:    "../../charts/datadog-operator/values.yaml",
-				Overrides: map[string]string{},
-			},
-			baselineManifestPath: "./baseline/default_DatadogAgent.yaml",
-			assertions:           verifyDatadogAgent,
 			skipTest:             SkipTest,
 		},
 		{
@@ -62,6 +48,20 @@ func Test_baseline_manifests(t *testing.T) {
 			skipTest:             SkipTest,
 		},
 		{
+			name: "DatadogAgent CRD default",
+			command: common.HelmCommand{
+				ReleaseName: "datadog-operator",
+				ChartPath:   "../../charts/datadog-operator",
+				// datadogCRDs is an alias defined in the chart dependency
+				ShowOnly:  []string{"charts/datadogCRDs/templates/datadoghq.com_datadogagents_v1.yaml"},
+				Values:    "../../charts/datadog-operator/values.yaml",
+				Overrides: map[string]string{},
+			},
+			baselineManifestPath: "./baseline/DatadogAgent_CRD_default.yaml",
+			assertions:           verifyDatadogAgent,
+			skipTest:             SkipTest,
+		},
+		{
 			name: "DatadogAgent CRD with cert manager enabled",
 			command: common.HelmCommand{
 				ReleaseName: "datadog-operator",
@@ -74,7 +74,7 @@ func Test_baseline_manifests(t *testing.T) {
 					"datadogCRDs.migration.datadogAgents.conversionWebhook.enabled": "true",
 				},
 			},
-			baselineManifestPath: "./baseline/DatadogAgent_with_certManager.yaml",
+			baselineManifestPath: "./baseline/DatadogAgent_CRD_with_certManager.yaml",
 			assertions:           verifyDatadogAgent,
 			skipTest:             SkipTest,
 		},
@@ -85,9 +85,8 @@ func Test_baseline_manifests(t *testing.T) {
 			continue
 		}
 		t.Run(tt.name, func(t *testing.T) {
-			manifest, err1 := common.RenderChart(t, tt.command)
-			// fmt.Println("manifest", manifest)
-			assert.Nil(t, err1, "cound't render template")
+			manifest, err := common.RenderChart(t, tt.command)
+			assert.Nil(t, err, "cound't render template")
 			tt.assertions(t, tt.baselineManifestPath, manifest)
 		})
 	}

@@ -14,11 +14,11 @@ import (
 //
 // Rendering is done by Terratest, for below inputs it will run helm command:
 //
-//	helm template --set useV2alpha1=false \
-//	              --show-only "templates/datadogagent.yaml \
-//	              -f ../k8s/datadog-agent-with-operator/values/staging.yaml \
-//	              -f ../charts/.common_lint_values.yaml \
-//	              datadog-operator "[path to the charts folder]/datadog-agent-with-operator"
+// helm template --set useV2alpha1=false \
+//	             --show-only "templates/datadogagent.yaml \
+//	             -f ../k8s/datadog-agent-with-operator/values/staging.yaml \
+//	             -f ../charts/.common_lint_values.yaml \
+//	             datadog-operator "[path to the charts folder]/datadog-agent-with-operator"
 
 const (
 	SkipTest = false
@@ -59,7 +59,7 @@ func Test_operator_chart(t *testing.T) {
 			skipTest:   SkipTest,
 		},
 		{
-			name: "Render all",
+			name: "Rendering all does not fail",
 			command: common.HelmCommand{
 				ReleaseName: "datadog-operator",
 				ChartPath:   "../../charts/datadog-operator",
