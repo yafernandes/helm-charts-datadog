@@ -14,4 +14,4 @@ vet:
 
 .PHONY: unit-test
 unit-test:
-	go test -C test ./... -count=1
+	go test -C test ./... -count=1 -v
