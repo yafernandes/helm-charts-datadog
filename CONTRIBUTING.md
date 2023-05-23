@@ -15,7 +15,7 @@ Our team will then happily review and merge contributions!
 
 ## Go Tests
 
-We are adding Go tests to ensure quality and correctness of our Helm charts. These tests are intended to validate charts and catch any potential issues early in the development process.
+Go tests ensure quality and correctness of our Helm charts. These tests are intended to validate charts and catch any potential issues early in the development process.
 
 These tests run as part of the CI workflow. They can be used locally, during development as well.
 
