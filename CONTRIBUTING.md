@@ -28,7 +28,7 @@ Tests have been validated using:
 They may work with older versions though.
 
 ### Running the Tests
-Go sources are located under `test` directory. Repository uses [Go workspace][go-ws], so test can be run from the repository root using following command:
+Go sources are located under the `test` directory. The repository uses [Go workspace][go-ws], so tests can be run from the repository root using following command:
 
 ```shell
  make test
