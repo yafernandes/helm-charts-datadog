@@ -25,7 +25,7 @@ Tests have been validated using:
 * Go v1.20
 * Helm v3.10.1
 
-They may work with older versions though.
+They may work with older versions, though.
 
 ### Running the Tests
 Go sources are located under the `test` directory. The repository uses [Go workspace][go-ws], so tests can be run from the repository root using following command:
