@@ -21,7 +21,7 @@ These tests run as part of the CI workflow. They can be used locally, during dev
 
 ### Prerequisites
 
-Tests have been validate using:
+Tests have been validated using:
 * Go v1.20
 * Helm v3.10.1
 
