@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: datadog-operator
-  namespace: default
+  namespace: datadog-agent
   labels:
     app.kubernetes.io/name: datadog-operator
     helm.sh/chart: datadog-operator-1.0.3

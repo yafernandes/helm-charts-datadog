@@ -32,6 +32,7 @@ func RenderChart(t *testing.T, cmd HelmCommand) (string, error) {
 
 	output, err := helm.RenderTemplateE(t, options, chartPath, cmd.ReleaseName, cmd.ShowOnly,
 		"-f", cmd.Values,
+		"-n", "datadog-agent",
 		// "--debug",
 	)
 
