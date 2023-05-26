@@ -1,5 +1,5 @@
 .PHONY: all
-all: docs fmt vet test
+all: fmt vet test
 
 .PHONY: test
 test: fmt vet unit-test
@@ -14,4 +14,8 @@ vet:
 
 .PHONY: unit-test
 unit-test:
-	go test -C test ./... -count=1 -v
+	go test -C test ./... -count=1
+
+.PHONY: update-test-baselines
+update-test-baselines:
+	go test -C test ./... -count=1 -args -updateBaselines=true

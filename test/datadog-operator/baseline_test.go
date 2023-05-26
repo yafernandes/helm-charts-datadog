@@ -3,11 +3,11 @@ package datadog_operator
 import (
 	"testing"
 
-	"github.com/DataDog/datadog-operator/apis/datadoghq/v2alpha1"
 	"github.com/DataDog/helm-chart/test/common"
 	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"
 	appsv1 "k8s.io/api/apps/v1"
+	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 )
 
 func Test_baseline_manifests(t *testing.T) {
@@ -87,6 +87,11 @@ func Test_baseline_manifests(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			manifest, err := common.RenderChart(t, tt.command)
 			assert.Nil(t, err, "cound't render template")
+			t.Log("update baselines", UpdateBaselines)
+			if UpdateBaselines {
+				common.WriteToFile(t, tt.baselineManifestPath, manifest)
+			}
+
 			tt.assertions(t, tt.baselineManifestPath, manifest)
 		})
 	}
@@ -97,7 +102,7 @@ func verifyOperatorDeployment(t *testing.T, baselineManifestPath, manifest strin
 }
 
 func verifyDatadogAgent(t *testing.T, baselineManifestPath, manifest string) {
-	verifyBaseline(t, baselineManifestPath, manifest, v2alpha1.DatadogAgent{}, v2alpha1.DatadogAgent{})
+	verifyBaseline(t, baselineManifestPath, manifest, v1.CustomResourceDefinition{}, v1.CustomResourceDefinition{})
 }
 
 func verifyBaseline[T any](t *testing.T, baselineManifestPath, manifest string, baseline, actual T) {

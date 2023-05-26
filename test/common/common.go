@@ -47,3 +47,8 @@ func LoadFromFile[T any](t *testing.T, filepath string, destObj *T) string {
 	helm.UnmarshalK8SYaml(t, content, destObj)
 	return content
 }
+
+func WriteToFile(t *testing.T, filepath, content string) {
+	err := os.WriteFile(filepath, []byte(content), 0644)
+	require.NoError(t, err, "can't update manifest", "path", filepath)
+}
